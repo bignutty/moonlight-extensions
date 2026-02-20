@@ -1,0 +1,21 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "markdowntable",
+  "version": "1.0.0",
+  "meta": {
+    "name": "Markdown Table",
+    "tagline": "adds markdown table formatting",
+    "authors": ["bignutty"],
+    "tags": ["chat"]
+  },
+  "dependencies": ["markdown"],
+  "settings": {
+    "fullWidth": {
+      "displayName": "Full Width",
+      "type": "boolean",
+      "description": "Makes all Tables use up the full width of the chat.",
+      "default": false
+    }
+  },
+  "apiLevel": 2
+}

@@ -1,0 +1,7 @@
+.markdown-table {
+    background: var(--background-base-lower);
+    border: 1px solid var(--border-normal);
+    border-radius: 4px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
