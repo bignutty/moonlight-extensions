@@ -1,0 +1,13 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "markdowndivider",
+  "version": "1.0.0",
+  "meta": {
+    "name": "Markdown Divider",
+    "tagline": "adds markdown divider formatting",
+    "authors": ["bignutty"],
+    "tags": ["chat"]
+  },
+  "dependencies": ["markdown"],
+  "apiLevel": 2
+}
