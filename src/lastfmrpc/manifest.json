@@ -1,0 +1,106 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "lastFmRpc",
+  "version": "1.0.0",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Last.fm Rich Presence",
+    "tagline": "Adds last.fm rich presence",
+    "description": "**Configuration is required**\n\nAn API key is required to fetch your current track. To get one, you can visit https://www.last.fm/api/account/create and fill in the following information:\n\nApplication name: Discord Rich Presence\nApplication description: (personal use)\n\nAnd copy the API key (not the shared secret!)",
+    "authors": ["yusdacra"],
+    "source": "https://git.gaze.systems/90008/moonlight-exts"
+  },
+  "dependencies": ["spacepack", "common"],
+  "settings": {
+    "username": {
+      "displayName": "Username",
+      "type": "string",
+      "description": "Your Last.fm username"
+    },
+    "apiKey": {
+      "displayName": "API key",
+      "type": "string",
+      "description": "Your Last.fm API key"
+    },
+    "shareUsername": {
+      "displayName": "Share username",
+      "type": "boolean",
+      "default": false,
+      "description": "show link to your Last.fm profile"
+    },
+    "shareSong": {
+      "displayName": "Share song",
+      "type": "boolean",
+      "default": true,
+      "description": "show link to song on Last.fm"
+    },
+    "hideWithSpotify": {
+      "displayName": "Hide if listening on Spotify",
+      "type": "boolean",
+      "default": true,
+      "description": "hide Last.fm rich presence when Spotify is playing"
+    },
+    "hideWithActivity": {
+      "displayName": "Hide if other activity",
+      "type": "boolean",
+      "default": false,
+      "description": "hide Last.fm rich presence if you have any other presence"
+    },
+    "statusName": {
+      "displayName": "Custom status text",
+      "description": "added after Listening to / Playing",
+      "type": "string",
+      "default": "some music"
+    },
+    "nameFormat": {
+      "displayName": "Status text format",
+      "type": "select",
+      "options": [
+        { "value": "status-name", "label": "use custom status text" },
+        { "value": "artist-first", "label": "Use 'artist - song' format" },
+        { "value": "song-first", "label": "Use 'song - artist' format" },
+        { "value": "artist", "label": "Use artist name only" },
+        { "value": "song", "label": "Use song name only" },
+        {
+          "value": "album",
+          "label": "Use album name (fallbacks to custom status text if song is not part of an album)"
+        }
+      ],
+      "default": "status-name"
+    },
+    "useListeningStatus": {
+      "displayName": "Use listening status",
+      "type": "boolean",
+      "default": true,
+      "description": "show 'Listening to' status instead of 'Playing'"
+    },
+    "missingArt": {
+      "displayName": "Placeholder art",
+      "type": "select",
+      "options": [
+        { "value": "lastfmLogo", "label": "Use large Last.fm logo" },
+        { "value": "placeholder", "label": "Use generic placeholder" }
+      ],
+      "default": "lastfmLogo",
+      "description": "When album or album art is missing"
+    },
+    "showLastFmLogo": {
+      "displayName": "Show Last.fm logo",
+      "type": "boolean",
+      "default": true,
+      "description": "show Last.fm logo in rich presence by the album cover"
+    },
+    "updateInterval": {
+      "displayName": "Update interval",
+      "type": "number",
+      "default": 10,
+      "description": "seconds to wait between fetching now playing and updating presence",
+      "advice": "restart"
+    },
+    "correctionsData": {
+      "displayName": "Corrections Data",
+      "type": "string",
+      "description": "Paste the contents of your Gramophone [corrections export](https://gramophone.bignut.zip/settings/corrections/manage) file here to apply artist corrections. Leave empty to clear."
+    }
+  }
+}
