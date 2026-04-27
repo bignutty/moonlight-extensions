@@ -7,8 +7,9 @@
     "name": "Last.fm Rich Presence",
     "tagline": "Adds last.fm rich presence",
     "description": "**Configuration is required**\n\nAn API key is required to fetch your current track. To get one, you can visit https://www.last.fm/api/account/create and fill in the following information:\n\nApplication name: Discord Rich Presence\nApplication description: (personal use)\n\nAnd copy the API key (not the shared secret!)",
-    "authors": ["yusdacra"],
-    "source": "https://git.gaze.systems/90008/moonlight-exts"
+    "authors": ["bignutty","90-008"],
+    "source": "https://github.com/bignutty/moonlight-extensions/tree/main/src/lastfmrpc",
+    "tags": ["profiles"]
   },
   "dependencies": ["spacepack", "common"],
   "settings": {
@@ -26,29 +27,29 @@
       "displayName": "Share username",
       "type": "boolean",
       "default": false,
-      "description": "show link to your Last.fm profile"
+      "description": "Show link to your Last.fm profile"
     },
     "shareSong": {
       "displayName": "Share song",
       "type": "boolean",
       "default": true,
-      "description": "show link to song on Last.fm"
+      "description": "Show link to song on Last.fm"
     },
     "hideWithSpotify": {
       "displayName": "Hide if listening on Spotify",
       "type": "boolean",
       "default": true,
-      "description": "hide Last.fm rich presence when Spotify is playing"
+      "description": "Hide Last.fm rich presence when Spotify is playing"
     },
     "hideWithActivity": {
       "displayName": "Hide if other activity",
       "type": "boolean",
       "default": false,
-      "description": "hide Last.fm rich presence if you have any other presence"
+      "description": "Hide Last.fm rich presence if you have any other presence"
     },
     "statusName": {
       "displayName": "Custom status text",
-      "description": "added after Listening to / Playing",
+      "description": "Added after Listening to / Playing",
       "type": "string",
       "default": "some music"
     },
@@ -72,7 +73,7 @@
       "displayName": "Use listening status",
       "type": "boolean",
       "default": true,
-      "description": "show 'Listening to' status instead of 'Playing'"
+      "description": "Show 'Listening to' status instead of 'Playing'"
     },
     "missingArt": {
       "displayName": "Placeholder art",
@@ -88,13 +89,13 @@
       "displayName": "Show Last.fm logo",
       "type": "boolean",
       "default": true,
-      "description": "show Last.fm logo in rich presence by the album cover"
+      "description": "Show Last.fm logo in rich presence by the album cover"
     },
     "updateInterval": {
       "displayName": "Update interval",
       "type": "number",
       "default": 10,
-      "description": "seconds to wait between fetching now playing and updating presence",
+      "description": "Seconds to wait between fetching now playing and updating presence",
       "advice": "restart"
     },
     "correctionsData": {
