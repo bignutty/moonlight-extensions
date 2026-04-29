@@ -6,7 +6,7 @@
   "meta": {
     "name": "Last.fm Rich Presence",
     "tagline": "Adds last.fm rich presence",
-    "description": "**Configuration is required**\n\nAn API key is required to fetch your current track. To get one, you can visit https://www.last.fm/api/account/create and fill in the following information:\n\nApplication name: Discord Rich Presence\nApplication description: (personal use)\n\nAnd copy the API key (not the shared secret!)",
+    "description": "Last.fm Rich Presence with links to Gramophone, an alternative Last.fm frontend.",
     "authors": ["bignutty","90-008"],
     "source": "https://github.com/bignutty/moonlight-extensions/tree/main/src/lastfmrpc",
     "tags": ["profiles"]
@@ -21,7 +21,7 @@
     "apiKey": {
       "displayName": "API key",
       "type": "string",
-      "description": "Your Last.fm API key"
+      "description": "Your Last.fm API key. If you don't have an api key, create one [here](https://www.last.fm/api/account/create)."
     },
     "shareUsername": {
       "displayName": "Share username",
@@ -75,22 +75,6 @@
       "default": true,
       "description": "Show 'Listening to' status instead of 'Playing'"
     },
-    "missingArt": {
-      "displayName": "Placeholder art",
-      "type": "select",
-      "options": [
-        { "value": "lastfmLogo", "label": "Use large Last.fm logo" },
-        { "value": "placeholder", "label": "Use generic placeholder" }
-      ],
-      "default": "lastfmLogo",
-      "description": "When album or album art is missing"
-    },
-    "showLastFmLogo": {
-      "displayName": "Show Last.fm logo",
-      "type": "boolean",
-      "default": true,
-      "description": "Show Last.fm logo in rich presence by the album cover"
-    },
     "updateInterval": {
       "displayName": "Update interval",
       "type": "number",
@@ -99,7 +83,7 @@
       "advice": "restart"
     },
     "correctionsData": {
-      "displayName": "Corrections Data",
+      "displayName": "Corrections data",
       "type": "string",
       "description": "Paste the contents of your Gramophone [corrections export](https://gramophone.bignut.zip/settings/corrections/manage) file here to apply artist corrections. Leave empty to clear."
     }
