@@ -1,10 +1,11 @@
 {
   "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "lastFmRpc",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "apiLevel": 2,
   "meta": {
     "name": "Last.fm Rich Presence",
+    "changelog": "Added artwork support for corrections.",
     "tagline": "Adds last.fm rich presence",
     "description": "Last.fm Rich Presence with links to Gramophone, an alternative Last.fm frontend.",
     "authors": ["bignutty","90-008"],

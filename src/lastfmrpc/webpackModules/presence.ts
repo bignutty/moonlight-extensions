@@ -1,6 +1,8 @@
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import { PresenceStore } from "@moonlight-mod/wp/common_stores";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { Correction, CorrectionMappings } from "./correction.pb.js";
+import jspb from "./jspb.js";
 
 const ApplicationAssetUtils = spacepack.findByCode("getAssetImage: size must === [")[0];
 const fetchAssetIds = spacepack.findFunctionByStrings(
@@ -95,33 +97,68 @@ const setActivity = (activity: Activity | null) => {
 };
 
 let updateInterval: NodeJS.Timeout;
-let correctionsMap = new Map<string, string>();
+
+interface CorrectionData {
+    displayName: string;
+    artworkUrl: string | null;
+}
+
+let artistCorrectionsMap = new Map<string, CorrectionData>();
 let lastCorrectionsRaw: string | undefined = undefined;
 
-const getCorrectedArtist = (artistName: string): string => {
+const formatArtworkUrl = (artPath: string | null | undefined): string | undefined => {
+    if (!artPath) return undefined;
+    if (!artPath.includes("/")) {
+        return `https://lastfm.freetls.fastly.net/i/u/300x300/${artPath}.png`;
+    }
+    return artPath;
+};
+
+const updateCorrectionsCache = () => {
     const raw = getOpt<string>("correctionsData");
-    if (raw !== lastCorrectionsRaw) {
-        lastCorrectionsRaw = raw;
-        correctionsMap.clear();
-        if (raw) {
-            try {
-                const parsed = JSON.parse(raw);
-                const artists = parsed[1];
-                if (Array.isArray(artists)) {
-                    for (const artist of artists) {
-                        const key = artist[0];
-                        const displayName = artist[2];
-                        if (typeof key === "string" && typeof displayName === "string") {
-                            correctionsMap.set(key.toLowerCase(), displayName);
-                        }
-                    }
-                }
-            } catch (e) {
-                logger.error("Failed to parse corrections data", e);
+    if (raw === lastCorrectionsRaw) return;
+
+    lastCorrectionsRaw = raw;
+    artistCorrectionsMap.clear();
+
+    if (!raw) return;
+
+    try {
+        const parsed = JSON.parse(raw);
+        let artists: any[] | null = null;
+
+        if (Array.isArray(parsed)) {
+            if (typeof parsed[0] === "number" && Array.isArray(parsed[1])) {
+                // Simplified export dump format: [timestamp, artists]
+                artists = parsed[1];
+            } else {
+                // Standard CorrectionMappings format
+                artists = jspb.g(parsed, CorrectionMappings.artists);
             }
         }
+
+        if (Array.isArray(artists)) {
+            for (const artist of artists) {
+                const key = jspb.g(artist, Correction.key);
+                const displayName = jspb.g(artist, Correction.display_name);
+                const rawArtwork = jspb.g(artist, Correction.artwork_url);
+
+                if (typeof key === "string" && typeof displayName === "string") {
+                    artistCorrectionsMap.set(key.toLowerCase(), {
+                        displayName,
+                        artworkUrl: formatArtworkUrl(rawArtwork) || null
+                    });
+                }
+            }
+        }
+    } catch (e) {
+        logger.error("Failed to parse corrections data", e);
     }
-    return correctionsMap.get(artistName.toLowerCase()) || artistName;
+};
+
+const getCorrectedArtistData = (artistName: string): CorrectionData | null => {
+    updateCorrectionsCache();
+    return artistCorrectionsMap.get(artistName.toLowerCase()) || null;
 };
 
 const start = () => {
@@ -171,7 +208,10 @@ const fetchTrackData = async (): Promise<TrackData | null> => {
         }
 
         const rawArtistName = rawTrack.artist.name || "Unknown";
-        const correctedArtist = getCorrectedArtist(rawArtistName);
+        const correction = getCorrectedArtistData(rawArtistName);
+        const correctedArtist = correction ? correction.displayName : rawArtistName;
+
+        const artistImageUrl = correction?.artworkUrl || rawTrack.artist.image[0]["#text"];
 
         // why does the json api have xml structure
         return {
@@ -180,7 +220,7 @@ const fetchTrackData = async (): Promise<TrackData | null> => {
             artist: correctedArtist,
             url: `https://gramophone.bignut.zip/tracks/${encodeURIComponent(correctedArtist)}/${rawTrack.album["#text"].length ? `${encodeURIComponent(rawTrack.album["#text"])}/` : ""}${encodeURIComponent(rawTrack.name)}`,
             imageUrl: trackImage,
-            artistImageUrl: rawTrack.artist.image[0]["#text"]
+            artistImageUrl: artistImageUrl
         };
     } catch (e) {
         logger.error("Failed to query Last.fm API", e);
