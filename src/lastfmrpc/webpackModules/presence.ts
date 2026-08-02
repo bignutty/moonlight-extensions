@@ -128,7 +128,7 @@ const updateCorrectionsCache = () => {
         let artists: any[] | null = null;
 
         if (Array.isArray(parsed)) {
-            if (typeof parsed[0] === "number" && Array.isArray(parsed[1])) {
+            if (Array.isArray(parsed[1])) {
                 // Simplified export dump format: [timestamp, artists]
                 artists = parsed[1];
             } else {
