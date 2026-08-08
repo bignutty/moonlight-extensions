@@ -49,6 +49,7 @@ interface TrackData {
     name: string;
     album: string;
     artist: string;
+    artistDisplayName: string;
     url: string;
     imageUrl?: string;
     artistImageUrl?: string;
@@ -217,8 +218,9 @@ const fetchTrackData = async (): Promise<TrackData | null> => {
         return {
             name: rawTrack.name || "Unknown",
             album: rawTrack.album["#text"],
-            artist: correctedArtist,
-            url: `https://gramophone.bignut.zip/tracks/${encodeURIComponent(correctedArtist)}/${rawTrack.album["#text"].length ? `${encodeURIComponent(rawTrack.album["#text"])}/` : ""}${encodeURIComponent(rawTrack.name)}`,
+            artist: rawArtistName,
+            artistDisplayName: correctedArtist || rawArtistName,
+            url: `https://gramophone.bignut.zip/tracks/${encodeURIComponent(rawArtistName)}/${rawTrack.album["#text"].length ? `${encodeURIComponent(rawTrack.album["#text"])}/` : ""}${encodeURIComponent(rawTrack.name)}`,
             imageUrl: trackImage,
             artistImageUrl: artistImageUrl
         };
@@ -279,7 +281,7 @@ const getActivity = async (): Promise<Activity | null> => {
         ? {
             large_image: await getApplicationAsset(largeImage),
             large_text: trackData.album || undefined,
-            small_text: trackData.artist,
+            small_text: trackData.artistDisplayName,
             small_image: await getApplicationAsset(smallImage),
             large_url: `https://gramophone.bignut.zip/albums/${encodeURIComponent(trackData.artist)}/${encodeURIComponent(trackData.album)}`,
             small_url: `https://gramophone.bignut.zip/artists/${encodeURIComponent(trackData.artist)}`
@@ -287,7 +289,7 @@ const getActivity = async (): Promise<Activity | null> => {
         : {
             large_image: await getApplicationAsset(trackData.album?.length ? "album_placeholder" : "track_placeholder"),
             large_text: trackData.album || undefined,
-            small_text: trackData.artist,
+            small_text: trackData.artistDisplayName,
             small_image: await getApplicationAsset(smallImage),
             large_url: trackData.album?.length
                 ? `https://gramophone.bignut.zip/albums/${encodeURIComponent(trackData.artist)}/${encodeURIComponent(trackData.album)}`
@@ -317,11 +319,11 @@ const getActivity = async (): Promise<Activity | null> => {
     const statusName = (() => {
         switch (getOpt<string>("nameFormat")) {
             case NameFormat.ArtistFirst:
-                return trackData.artist + " - " + trackData.name;
+                return trackData.artistDisplayName + " - " + trackData.name;
             case NameFormat.SongFirst:
-                return trackData.name + " - " + trackData.artist;
+                return trackData.name + " - " + trackData.artistDisplayName;
             case NameFormat.ArtistOnly:
-                return trackData.artist;
+                return trackData.artistDisplayName;
             case NameFormat.SongOnly:
                 return trackData.name;
             case NameFormat.AlbumName:
@@ -338,7 +340,7 @@ const getActivity = async (): Promise<Activity | null> => {
         status_display_type: 1,
 
         details: trackData.name,
-        state: trackData.artist,
+        state: trackData.artistDisplayName,
         assets,
 
         ...links,
